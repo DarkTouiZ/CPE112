@@ -12,16 +12,16 @@ bool isEmpty(int *top);
 
 int main(){
     int size, top = -1;
-    scanf("%d", &size);
+    scanf(" %d", &size);
     if(size <= 0){
-        printf("Please enter a positive number.\n");
+        printf("Please enter a positive number.");
         return 1;
     }
 
     int *stack = (int *)malloc(size * sizeof(int));
     if (stack == NULL)
     {
-        printf("Memory allocation failed.\n");
+        printf("Memory allocation failed.");
         return 1;
     }
 
@@ -41,11 +41,11 @@ int main(){
             peek(stack, &top);
             break;
         }else if(mode == 4){
-            printf("Exiting...\n");
-            free(stack);
+            printf("Exiting...");
+            // free(stack);
             return 0;
         }else{
-            printf("Invalid choice.\n");
+            printf("Invalid choice.");
             return 1;
         }
     }while(1);
@@ -54,7 +54,7 @@ int main(){
 
 void push (int *stack, int *topIdx, int size, int newval){
     if(isFull(topIdx, size)){
-        printf("Stack Overflow. \n");
+        printf("Stack Overflow.");
         exit(1);
     }else{
         *topIdx = *topIdx + 1;
@@ -64,7 +64,7 @@ void push (int *stack, int *topIdx, int size, int newval){
 
 void pop(int *stack, int *topIdx){
     if(isEmpty(topIdx)){
-        printf("Stack Underflow. \n");
+        printf("Stack Underflow.");
         exit(1);
     }else{
         *topIdx = *topIdx - 1;
@@ -73,7 +73,7 @@ void pop(int *stack, int *topIdx){
 
 void peek(int stack[], int *topIdx){
     if(isEmpty(topIdx)){
-        printf("Stack is empty. \n");
+        printf("Stack is empty.");
         exit(1);
     }else{
         for(int i = *topIdx; i >= 0; i--){
