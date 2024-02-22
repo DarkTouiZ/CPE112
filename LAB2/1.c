@@ -1,120 +1,39 @@
-//66070501060  ADISORN PARAMA
-//Lab 3.1: Linked List Insertion
+//66070501060 Adisorn Parama 
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Node
-{
-    int data;
-    struct Node *next;
-} Node;
-
-Node *new(Node *node)
-{
-    node = (Node *)malloc(sizeof(Node));
-    return node;
-}
-
-Node *assignNode(Node *node, int data)
-{
-    node->data = data;
-    node->next = NULL;
-    return node;
-}
-
-Node *insertBegin(Node *Head, Node *newNode)
-{
-    if(Head == NULL){
-        Head = newNode;
-    }else{
-        newNode->next = Head;
-        Head = newNode;
-    }
-    return Head;
-}
-
-Node *insertEnd(Node *Head, Node *newNode)
-{
-    if (Head == NULL)
-    {
-        Head = newNode;
-    }
-    else
-    {
-        Node *ptr = Head;
-        while (ptr->next != NULL)
-        {
-            ptr = ptr->next;
-        }
-        ptr->next = newNode;
-    }
-    return Head;
-}
-
-void displayList(Node **Head)
-{
-    for(Node *curr = *Head; curr != NULL; curr = curr->next){
-        printf("%d ", curr->data);
-    }
-}
-
-
-void freeList(Node *Head){
-    while (Head != NULL)
-    {
-        Node *curr = Head;
-        Head = Head->next;
-        free(curr);
-    }
-}
-
 int main()
 {
-    Node *Head = NULL;
-
-    // input Number of Node and Mode
-    int n, mode;
-    scanf("%d", &n);
-    scanf("%d", &mode);
-    // invalid case
-    if (n < 1 )
+    int n;
+    scanf("%d",&n);
+    int *arr = (int*)malloc(n*sizeof(int));
+    for(int i=0;i<n;i++)
     {
-        printf("Invalid");
-        return 1;
+        scanf("%d",arr+i);
     }
 
-    // insert node following mode
-    if (mode == 1)
-    {
-        // insert node from begin
-        int val;
-        for (int i = 0; i < n; ++i)
+    int mode;
+    scanf("%d",&mode);
+    int printed =  0;
+    
+    if(mode == 0){
+        //print value in even index
+        for(int i=0;i<n;i+=2)
         {
-            scanf("%d", &val);
-            Node *newNode = new(newNode);
-            newNode = assignNode(newNode, val);
-            Head = insertBegin(Head, newNode);
-        }
-    }
-    else if (mode == 2)
-    {
-        // insert node from end
-        int val;
-        for (int i = 0; i < n; ++i)
-        {
-            scanf("%d", &val);
-            Node *newNode = new (newNode);
-            newNode = assignNode(newNode, val);
-            Head = insertEnd(Head, newNode);
+            printf("%d ",*(arr+i));
+            printed++;
         }
     }else{
-        printf("Invalid");
-        return 1;
+        //print value in odd index
+        for(int i=1;i<n;i+=2)
+        {
+            printf("%d ",*(arr+i));
+            printed++;
+        }
     }
-
-    // print Result
-    displayList(&Head);
-    freeList(Head);
+    if(printed == 0)
+    {
+        printf("none");
+    }
     return 0;
 }
-

@@ -1,91 +1,120 @@
-//66070501060 ADISORN PARAMA
-//Lab 4.1 : Stack Array
+//66070501060  ADISORN PARAMA
+//Lab 3.1: Linked List Insertion
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
-void push(int *stack,int *topIdx,int size, int newVal);
-void pop(int *stack, int *topIdx);
-void peek(int *stack, int *topIdx);
-bool isFull(int *stack, int size);
-bool isEmpty(int *top);
+typedef struct Node
+{
+    int data;
+    struct Node *next;
+} Node;
 
-int main(){
-    int size, top = -1;
-    scanf(" %d", &size);
-    if(size <= 0){
-        printf("Please enter a positive number.");
-        return 1;
+Node *new(Node *node)
+{
+    node = (Node *)malloc(sizeof(Node));
+    return node;
+}
+
+Node *assignNode(Node *node, int data)
+{
+    node->data = data;
+    node->next = NULL;
+    return node;
+}
+
+Node *insertBegin(Node *Head, Node *newNode)
+{
+    if(Head == NULL){
+        Head = newNode;
+    }else{
+        newNode->next = Head;
+        Head = newNode;
     }
+    return Head;
+}
 
-    int *stack = (int *)malloc(size * sizeof(int));
-    if (stack == NULL)
+Node *insertEnd(Node *Head, Node *newNode)
+{
+    if (Head == NULL)
     {
-        printf("Memory allocation failed.");
+        Head = newNode;
+    }
+    else
+    {
+        Node *ptr = Head;
+        while (ptr->next != NULL)
+        {
+            ptr = ptr->next;
+        }
+        ptr->next = newNode;
+    }
+    return Head;
+}
+
+void displayList(Node **Head)
+{
+    for(Node *curr = *Head; curr != NULL; curr = curr->next){
+        printf("%d ", curr->data);
+    }
+}
+
+
+void freeList(Node *Head){
+    while (Head != NULL)
+    {
+        Node *curr = Head;
+        Head = Head->next;
+        free(curr);
+    }
+}
+
+int main()
+{
+    Node *Head = NULL;
+
+    // input Number of Node and Mode
+    int n, mode;
+    scanf("%d", &n);
+    scanf("%d", &mode);
+    // invalid case
+    if (n < 1 )
+    {
+        printf("Invalid");
         return 1;
     }
 
-    int mode;
-    do{
-        scanf("%d", &mode);
-        if(mode == 1){
-            //push
-            int val;
+    // insert node following mode
+    if (mode == 1)
+    {
+        // insert node from begin
+        int val;
+        for (int i = 0; i < n; ++i)
+        {
             scanf("%d", &val);
-            push(stack, &top, size, val);
-        }else if(mode == 2){
-            //pop
-            pop(stack, &top);
-        }else if(mode == 3){
-            //show value in stack
-            peek(stack, &top);
-            break;
-        }else if(mode == 4){
-            printf("Exiting...");
-            // free(stack);
-            return 0;
-        }else{
-            printf("Invalid choice.");
-            return 1;
+            Node *newNode = new(newNode);
+            newNode = assignNode(newNode, val);
+            Head = insertBegin(Head, newNode);
         }
-    }while(1);
+    }
+    else if (mode == 2)
+    {
+        // insert node from end
+        int val;
+        for (int i = 0; i < n; ++i)
+        {
+            scanf("%d", &val);
+            Node *newNode = new (newNode);
+            newNode = assignNode(newNode, val);
+            Head = insertEnd(Head, newNode);
+        }
+    }else{
+        printf("Invalid");
+        return 1;
+    }
+
+    // print Result
+    displayList(&Head);
+    freeList(Head);
     return 0;
 }
 
-void push (int *stack, int *topIdx, int size, int newval){
-    if(isFull(topIdx, size)){
-        printf("Stack Overflow.");
-        exit(1);
-    }else{
-        *topIdx = *topIdx + 1;
-        stack[*topIdx] = newval;
-    }
-}
-
-void pop(int *stack, int *topIdx){
-    if(isEmpty(topIdx)){
-        printf("Stack Underflow.");
-        exit(1);
-    }else{
-        *topIdx = *topIdx - 1;
-    }
-}
-
-void peek(int stack[], int *topIdx){
-    if(isEmpty(topIdx)){
-        printf("Stack is empty.");
-        exit(1);
-    }else{
-        for(int i = *topIdx; i >= 0; i--){
-            printf("%d\n", stack[i]);
-        }
-    }
-}
-
-bool isFull(int *topIdx, int size){
-    return *topIdx == size - 1;
-}
-
-bool isEmpty(int *topIdx){
-    return *topIdx == -1;
-}

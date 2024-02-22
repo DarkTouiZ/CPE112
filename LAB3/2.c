@@ -1,109 +1,157 @@
 //66070501060 ADISORN PARAMA
-//Lab 4.2 : Stack as Linked List
+//Lab 3.2: Before or After Insertion
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
-typedef struct Node{
+typedef struct Node
+{
     int data;
     struct Node *next;
-}Node;
+} Node;
 
-Node *assignNode(Node *newNode, int val);
-void push(Node **top, int val);
-void pop(Node **top);
-void Top(Node *top);
-void show(Node *top);
-bool isEmpty(Node *top);
-void freeStack(Node *top);
+Node *new(Node *node);
+Node *assignNode(Node *newNode, int data);
+Node *insertBefore(Node *Head, int key, Node *newNode);
+Node *insertAfter(Node *Head, int key, Node *newNode);
+Node *pushBack(Node *head, Node *newNode);
+void displayList(Node **Head);
+void freeList(Node *Head);
 
-int main(){
-    Node *top = NULL;
+int main()
+{
+    Node *Head = NULL;
+    int n;
+    scanf("%d", &n);
+    // invalid case
+    if (n < 1)
+    {
+        return 1;
+    }
+
+    for (int i = 0; i < n; ++i)
+    {
+        int val;
+        scanf("%d", &val);
+        Node *newNode = new (newNode);
+        newNode = assignNode(newNode, val);
+        Head = pushBack(Head, newNode);
+    }
     char mode;
-    do{
+    while (1)
+    {
         scanf(" %c", &mode);
-        if(mode == 'p'){
-            //push
-            int val;
-            scanf("%d", &val);
-            push(&top, val);
-        }else if(mode == 'o'){
-            //pop
-            pop(&top);
-        }else if(mode == 't'){
-            //top
-            Top(top);
-        }else if(mode == 'e'){
-            //empty
-            printf("%d\n", isEmpty(top));
-        }else if(mode == 's'){
-            //show
-            show(top);
-        }else if(mode == 'q'){
-            //exit
-            freeStack(top);
-            return 0;
-        }else{
-            printf("Invalid choice.\n");
-            return 1;
+        if (mode == 'A')
+        {
+            int key;
+            int insertData;
+            scanf("%d %d", &key, &insertData);
+            Node *newNode = new (newNode);
+            assignNode(newNode, insertData);
+
+            insertAfter(Head, key, newNode);
         }
-    }while(1);
+        else if (mode == 'B')
+        {
+            int key;
+            int insertData;
+            scanf("%d %d", &key, &insertData);
+            Node *newNode = new (newNode);
+            assignNode(newNode, insertData);
+
+            Head = insertBefore(Head, key, newNode);
+        }
+        else
+        {
+            displayList(&Head);
+            break;
+        }
+    }
+    return 0;
 }
 
-Node *assignNode(Node *newNode, int val){
-    newNode = (Node *)malloc(sizeof(Node));
-    newNode->data = val;
+Node *new(Node *node)
+{
+    node = (Node *)malloc(sizeof(Node));
+    return node;
+}
+
+Node *assignNode(Node *newNode, int data)
+{
+    newNode->data = data;
     newNode->next = NULL;
     return newNode;
 }
 
-void push(Node **top, int val){
-    Node *newNode = assignNode(newNode, val);
-    newNode->next = *top;
-    *top = newNode;
-}
-
-void pop(Node **top){
-    if(isEmpty(*top)){
-        printf("empty\n");
-        return;
-    }else{
-        printf("%d\n", (*top)->data);
-        Node *tmp = *top;
-        *top = (*top)->next;
-        free(tmp);
+Node *pushBack(Node *Head, Node *newNode)
+{
+    if(Head == NULL){
+        Head = newNode;
+        return Head;
     }
-}
-
-void Top(Node *top){
-    if(isEmpty(top)){
-        printf("empty\n");
-        return;
+    Node *curr = Head;
+    while (curr->next != NULL)
+    {
+        curr = curr->next;
     }
-    printf("%d\n", top->data);
+    curr->next = newNode;
+    return Head;
 }
 
-void show(Node *top){
-    if(isEmpty(top)){
-        printf("empty\n");
-        return;
-    }else{
-        Node *tmp = top;
-        while(tmp != NULL){
-            printf("%d\n", tmp->data);
-            tmp = tmp->next;
+Node *insertBefore(Node *Head, int key, Node *newNode)
+{
+    if (Head == NULL)
+    {
+        Head = newNode;
+        return Head;
+    }
+    Node *curr = Head;
+    Node *prev = NULL;
+    while (curr->data != key)
+    {
+        if (curr->next == NULL)
+        {
+            return Head;
         }
+        prev = curr;
+        curr = curr->next;
     }
+    if(curr == Head){
+        newNode->next = Head;
+        Head = newNode;
+        return Head;
+    }
+    newNode->next = curr;
+    prev->next = newNode;
+    return Head;
 }
 
-bool isEmpty(Node *top){
-    return top == NULL;
+Node *insertAfter(Node *Head, int key, Node *newNode)
+{
+    if (Head == NULL)
+    {
+        Head = newNode;
+        return Head;
+    }
+    Node *curr = Head;
+    Node *prev = NULL;
+    while (curr->data != key)
+    {
+        if(curr->next == NULL)
+        {
+            return Head;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
+    newNode->next = curr->next;
+    curr->next = newNode;
+    return Head;
 }
 
-void freeStack(Node *top){
-    while(top != NULL){
-        Node *tmp = top;
-        top = top->next;
-        free(tmp);
+void displayList(Node **Head)
+{
+    for (Node *curr = *Head; curr != NULL; curr = curr->next)
+    {
+        printf("%d ", curr->data);
     }
 }

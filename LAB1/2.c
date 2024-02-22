@@ -1,36 +1,203 @@
-//66070501060 Adisorn Parama 
+// 66070501060 Adisorn Parama
+
 #include <stdio.h>
-#include <stdlib.h>
 
-int main()
+void printSet(int n, int *set)
 {
-    int n;
-    scanf("%d", &n);
-
-    // array of size n is declared
-    int *arr = (int*)malloc(n*sizeof(int));
-    for(int i=0; i<n; i++)
-        scanf("%d", arr+i);
-
-    //find the largest and the smallest element in array
-    int largest = *arr, smallest = *arr, largest_index = 0, smallest_index = 0;
-    for(int i=1; i<n; i++)
+    if (n == 0)
     {
-        if(*(arr+i) > largest)
+        printf("empty\n");
+        return;
+    }
+    for (int i = 0; i < n; i++)
+    {
+        printf("%d ", set[i]);
+    }
+    printf("\n");
+}
+
+int getSet(int *size, int *arr, int m, int n)
+{
+   for (int i = 0; i < *size; i++)
+   {
+        scanf("%d", &arr[i]);
+        if (arr[i] < m || arr[i] > n || i > 0 && arr[i] == arr[i - 1])
         {
-            largest = *(arr+i);
-            largest_index = i;
+            i--;
+            (*size)--;
         }
-        if(*(arr+i) < smallest)
+   }
+}
+
+void genUniverse(int m, int n, int *u)
+{
+   for (int i = 0; i < n - m + 1; i++)
+   {
+       u[i] = m + i;
+   }
+}
+
+void Union(int sizeA, int sizeB, int A[], int B[])
+{
+    int C[sizeA + sizeB];
+    int sizeC = 0;
+    int iA = 0, iB = 0;
+    while (iA < sizeA && iB < sizeB)
+    {
+        // sort A and B into set C
+        if (A[iA] < B[iB])
         {
-            smallest = *(arr+i);
-            smallest_index = i;
+            C[sizeC] = A[iA];
+            iA++;
+            sizeC++;
+        }
+        else if (A[iA] > B[iB])
+        {
+            C[sizeC] = B[iB];
+            iB++;
+            sizeC++;
+        }
+        else
+        {
+            C[sizeC] = A[iA];
+            iA++;
+            iB++;
+            sizeC++;
+        }
+    }
+    while (iA < sizeA)
+    {
+        C[sizeC] = A[iA];
+        iA++;
+        sizeC++;
+    }
+    while (iB < sizeB)
+    {
+        C[sizeC] = B[iB];
+        iB++;
+        sizeC++;
+    }
+
+    printSet(sizeC, C);
+}
+
+void Intersection(int sizeA, int sizeB, int *A, int *B)
+{
+    int C[sizeA + sizeB];
+    int sizeC = 0;
+    int iA = 0, iB = 0;
+    while (iA < sizeA && iB < sizeB)
+    {
+        if (A[iA] < B[iB])
+        {
+            iA++;
+        }
+        else if (A[iA] > B[iB])
+        {
+            iB++;
+        }
+        else
+        {
+            // insert intersection into set C
+            C[sizeC] = A[iA];
+            iA++;
+            iB++;
+            sizeC++;
         }
     }
 
-    //print answer
-    printf("%d %d", largest, largest_index);
-    printf("\n%d %d", smallest, smallest_index);
+    printSet(sizeC, C);
+}
+
+void Difference(int sizeA, int sizeB, int A[], int B[])
+{
+    // difference (A-B)
+    int C[sizeA];
+    int sizeC = 0;
+    int iA = 0, iB = 0;
+    while (iA < sizeA && iB < sizeB)
+    {
+        if (A[iA] < B[iB])
+        {
+            C[sizeC] = A[iA];
+            iA++;
+            sizeC++;
+        }
+        else if (A[iA] > B[iB])
+        {
+            iB++;
+        }
+        else
+        {
+            iA++;
+            iB++;
+        }
+    }
+    while (iA < sizeA)
+    {
+        C[sizeC] = A[iA];
+        iA++;
+        sizeC++;
+    }
+
+    printSet(sizeC, C);
+}
+
+int main(void)
+{
+    int m, n;
+    scanf("%d %d", &m, &n);
+    if (m < -10000 || n > 10000 || m >= n)
+    {
+        // Invalid input (out of range or m >= n)
+        return 1;
+    }
+
+    int u[n - m + 1];
+    genUniverse(m, n, u);
+
+    int sizeA;
+    scanf("%d", &sizeA);
+    if (0 > sizeA || sizeA > 100)
+    {
+        // Invalid input (out of range)
+        return 1;
+    }
+    int A[sizeA];
+    // call getSet function to get the set A
+    getSet(&sizeA, A, m, n);
+
+    int sizeB;
+    scanf("%d", &sizeB);
+    if (0 > sizeB || sizeB > 100)
+    {
+        // Invalid input (out of range)
+        return 1;
+    }
+    int B[sizeB];
+    // call getSet function to get the set B
+    getSet(&sizeB, B, m, n);
+
+    printSet(sizeA, A);
+    printSet(sizeB, B);
+
+    // Union
+    Union(sizeA, sizeB, A, B);
+
+    // // Intersection
+    Intersection(sizeA, sizeB, A, B);
+
+    // Difference (A-B)
+    Difference(sizeA, sizeB, A, B);
+
+    // Difference (B-A)
+    Difference(sizeB, sizeA, B, A);
+
+    // Complement (U-A)
+    Difference(n - m + 1, sizeA, u, A);
+
+    // Complement (U-B)
+    Difference(n - m + 1, sizeB, u, B);
 
     return 0;
 }

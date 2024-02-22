@@ -1,39 +1,40 @@
-//66070501060 Adisorn Parama 
+// 66070501060 Adisorn Parama  
+
 #include <stdio.h>
-#include <stdlib.h>
+
+void makeSet(int *set,int *numElement)
+{
+    int numMember = 0;
+    for(int i=0; i < *numElement; i++){
+        int tmp;
+        scanf("%d",&tmp);
+        if(numMember==0){
+            set[numMember] = tmp;
+            numMember++;
+        }else{
+            
+            if(set[numMember-1] != tmp){
+                set[numMember] = tmp;
+                numMember++;
+            }
+        }
+    }
+    *numElement = numMember;
+}
 
 int main()
 {
     int n;
-    scanf("%d",&n);
-    int *arr = (int*)malloc(n*sizeof(int));
-    for(int i=0;i<n;i++)
-    {
-        scanf("%d",arr+i);
+    scanf("%d", &n);
+    if(n < 1 || n > 1000){
+        return 0;
     }
-
-    int mode;
-    scanf("%d",&mode);
-    int printed =  0;
+    int set[n];
+    makeSet(set, &n);
     
-    if(mode == 0){
-        //print value in even index
-        for(int i=0;i<n;i+=2)
-        {
-            printf("%d ",*(arr+i));
-            printed++;
-        }
-    }else{
-        //print value in odd index
-        for(int i=1;i<n;i+=2)
-        {
-            printf("%d ",*(arr+i));
-            printed++;
-        }
-    }
-    if(printed == 0)
-    {
-        printf("none");
+    printf("%d\n", n);
+    for(int i=0; i<n;i++){
+        printf("%d ", set[i]);
     }
     return 0;
 }
