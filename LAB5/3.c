@@ -6,24 +6,24 @@
 #include <string.h>
 #include <ctype.h>
 
-typedef struct character
+typedef struct node
 {
     char name;
     int priority;
-    struct character *next;
-} CHARACTER;
+    struct node *next;
+} node;
 
 int isVowel(char c);
 int priority(char c);
-void insert(CHARACTER **head, char c);
-void print(CHARACTER *head);
+void insert(node **head, char c);
+void print(node *head);
 
 int main(void)
 {
     char input[1000];
     fgets(input, 1000, stdin);
     input[strlen(input) - 1] = '\0';
-    CHARACTER *head = NULL;
+    node *head = NULL;
     for (int i = 0; i < strlen(input); i++)
     {
         insert(&head, input[i]);
@@ -32,46 +32,46 @@ int main(void)
     return 0;
 }
 
-void insert(CHARACTER **head, char c)
+void insert(node **head, char c)
 {
-    CHARACTER *newCharacter = (CHARACTER *)malloc(sizeof(CHARACTER));
-    if (newCharacter == NULL)
+    node *newNode = (node *)malloc(sizeof(node));
+    if (newNode == NULL)
     {
         printf("Memory allocation failed\n");
         exit(1);
     }
-    newCharacter->name = c;
-    newCharacter->priority = priority(c);
-    newCharacter->next = NULL;
+    newNode->name = c;
+    newNode->priority = priority(c);
+    newNode->next = NULL;
     if (*head == NULL)
     {
-        *head = newCharacter;
+        *head = newNode;
     }
     else
     {
-        CHARACTER *current = *head;
-        while (current->next != NULL)
+        node *curr = *head;
+        while (curr->next != NULL)
         {
-            current = current->next;
+            curr = curr->next;
         }
-        current->next = newCharacter;
+        curr->next = newNode;
     }
 }
 
-void print(CHARACTER *head)
+void print(node *head)
 {
-    CHARACTER *current = head;
+    node *curr = head;
     for (int i = 3; i > 0; i--)
     {
-        while (current != NULL)
+        while (curr != NULL)
         {
-            if (current->priority == i)
+            if (curr->priority == i)
             {
-                printf("%c", current->name);
+                printf("%c", curr->name);
             }
-            current = current->next;
+            curr = curr->next;
         }
-        current = head;
+        curr = head;
     }
     printf("\n");
 }

@@ -5,142 +5,108 @@
 #include <stdlib.h>
 #include <string.h>
 
-void insertQueue(int *queue, int *FRONT, int *REAR, int size, int value);
-void dequeue(int *queue, int *FRONT, int *REAR, int size);
-void show(int *queue, int FRONT, int REAR, int size);
+void enqueue(int *queue, int *front, int *rear, int size, int val);
+void dequeue(int *queue, int *front, int *rear, int size);
+void display(int *queue, int front, int rear, int size);
 
-int main(void)
-{
-    // Input size of queue
+int main(){
     int size;
     scanf("%d", &size);
-    if (1 > size || size > 10)
-    {
+    //invalid case
+    if(size < 1 || size > 10){
         printf("Invalid size\n");
         return 1;
     }
-    // Create queue
-    int FRONT = -1, REAR = -1;
+
+    //create queue
     int *queue = (int *)malloc(size * sizeof(int));
-    if (queue == NULL)
-    {
+    int front = -1, rear = -1;
+    if(queue == NULL){
         printf("Memory allocation failed\n");
-        exit(1);
+        return 1;
     }
-    // Menu
-    char command[2];
+
+    char oper;
     while (1)
     {
-        scanf("%s", &command);
-        if (strcmp(command, "I") == 0)
-        {
-            int value;
-            scanf("%d", &value);
-            insertQueue(queue, &FRONT, &REAR, size, value);
-        }
-        else if (strcmp(command, "D") == 0)
-        {
-            dequeue(queue, &FRONT, &REAR, size);
-        }
-        else if (strcmp(command, "S") == 0)
-        {
-            show(queue, FRONT, REAR, size);
-        }
-        else if (strcmp(command, "E") == 0)
-        {
-            free(queue);
-            return 0;
-        }
-        else
-        {
+        scanf(" %c", &oper);
+        if(oper == 'I'){
+            int val;
+            scanf("%d", &val);
+            enqueue(queue, &front, &rear, size, val);
+        }else if(oper == 'D'){
+            dequeue(queue, &front, &rear, size);
+        }else if(oper == 'S'){
+            display(queue, front, rear, size);
+        }else if(oper == 'E'){
+            break;
+        }else{
             printf("Invalid command\n");
             return 1;
         }
     }
+    free(queue);
+    return 0;
 }
 
-void insertQueue(int *queue, int *FRONT, int *REAR, int size, int value)
-{
-    if ((*FRONT == 0 && *REAR == size - 1) || (*REAR == *FRONT - 1))
-    {
+void enqueue(int *queue, int *front, int *rear, int size, int val){
+    if((*front == 0 && *rear == size - 1) || (*rear == *front - 1)){
         printf("Queue is full!!\n");
         return;
     }
-    if (*FRONT == -1)
-    {
-        // Queue is empty
-        *FRONT = 0;
-        *REAR = 0;
+    if(*front == -1){
+        *front = 0;
+        *rear = 0;
+    }else if(*rear == size - 1){
+        *rear = 0;
+    }else{
+        *rear = *rear + 1;
     }
-    else if (*REAR == size - 1)
-    {
-        // REAR = last index
-        *REAR = 0;
-    }
-    else
-    {
-        // Increment REAR
-        *REAR = *REAR + 1;
-    }
-    // Insert value
-    queue[*REAR] = value;
+    queue[*rear] = val;
 }
 
-void dequeue(int *queue, int *FRONT, int *REAR, int size)
-{
-    if (*FRONT == -1)
-    {
+void dequeue(int *queue, int *front, int *rear, int size){
+    if(*front == -1){
         printf("Queue is empty!!\n");
         return;
     }
-    int value = queue[*FRONT];
-    if (*FRONT == *REAR)
-    {
-        // Queue has only one element
-        *FRONT = -1;
-        *REAR = -1;
+    
+    int val = queue[*front];
+    if(*front == *rear){
+        //reset queue
+        *front = -1;
+        *rear = -1;
+    }else if(*front == size - 1){
+        //reset front
+        *front = 0;
+    }else{
+        //move front
+        *front = *front + 1;
     }
-    else if (*FRONT == size - 1)
-    {
-        // FRONT = last index
-        *FRONT = 0;
-    }
-    else
-    {
-        // Increment FRONT
-        *FRONT = *FRONT + 1;
-    }
-    // Print value
-    printf("%d\n", value);
+    //print value that dequeue
+    printf("%d\n", val);
 }
 
-void show(int *queue, int FRONT, int REAR, int size)
-{
-    if (FRONT == -1)
-    {
+void display(int *queue, int front, int rear, int size){
+    if(front == -1){
         printf("Queue is empty!!\n");
         return;
     }
-    printf("Front: %d\n", FRONT);
+    printf("Front: %d\n", front);
     printf("Items: ");
-    if (REAR >= FRONT)
-    {
-        for (int i = FRONT; i <= REAR; i++)
-        {
+    if(rear >= front){
+        for(int i = front; i <= rear; i++){
             printf("%d ", queue[i]);
         }
-    }
-    else
-    {
-        for (int i = FRONT; i < size; i++)
-        {
+    }else{
+        for(int i = front; i < size; i++){
             printf("%d ", queue[i]);
         }
-        for (int i = 0; i <= REAR; i++)
-        {
+        for(int i = 0; i <= rear; i++){
             printf("%d ", queue[i]);
         }
     }
     printf("\n");
-    printf("Rear: %d\n", REAR);
+    printf("Rear: %d\n", rear);
 }
+
