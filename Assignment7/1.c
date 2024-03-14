@@ -22,7 +22,7 @@ int main()
     //invaild input
     if(n < 1 || n > 1000)
     {
-        printf("Invalid input\n");
+        printf("None\n");
         return 1;
     }
     //create BST
@@ -51,6 +51,13 @@ int main()
         freeTree(root);
         return 1;
     }
+    //cant find kth smallest element
+    if(k > n)
+    {
+        printf("None\n");
+        freeTree(root);
+        return 0;
+    }
     int count = 0;
     kthSmallestElement(root, k, &count);
     return 0;
@@ -66,7 +73,6 @@ Node *newNode(int data)
 
 Node *insert(Node *node, int data)
 {
-    //inoder insert
     if(node == NULL)
         return newNode(data);
     if(data < node->data)
@@ -79,6 +85,7 @@ Node *insert(Node *node, int data)
 void kthSmallestElement(Node *node, int k, int *count)
 {
     //inorder traversal always give sorted element
+
     if(node == NULL)
         return;
     kthSmallestElement(node->left, k, count);
