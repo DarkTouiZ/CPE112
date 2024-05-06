@@ -39,16 +39,16 @@ int main(){
 
 // Create graph
 graph *createGraph(int vertices) {
-    graph *graph = malloc(sizeof(graph));
-    graph->numVertices = vertices;
+    graph *Graph = (graph *)malloc(sizeof(Graph));
+    Graph->numVertices = vertices;
     // Create array of adjacency lists for each vertex
-    graph->adjLists = malloc(vertices * sizeof(edge*));
+    Graph->adjLists = (graph *)malloc(vertices * sizeof(edge*));
 
     int i;
     for (i = 0; i < vertices; i++)
-        graph->adjLists[i] = NULL;
+        Graph->adjLists[i] = NULL;
 
-    return graph;
+    return Graph;
 }
 
 // Create edge between two vertices with weight add to the adjacency list of the initial vertex
